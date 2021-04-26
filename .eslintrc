@@ -1,9 +1,7 @@
 {
-  "extends": "eslint-config-egg/typescript",
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "rules": {
-    "quotes": ["error", "double"]
-  }
+  "extends": "plugin:prettier/recommended"
+  // "rules": {
+  //   "quotes": ["error", "double"],
+  //   "array-bracket-spacing": ["error", "never"]
+  // }
 }
