@@ -1,7 +1,7 @@
 /*
  * @Author: wangshicheng
  * @Date: 2021-04-25 20:50:10
- * @LastEditTime: 2021-04-26 00:15:23
+ * @LastEditTime: 2021-04-26 19:18:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/config/config.default.ts
@@ -14,6 +14,12 @@ export default (appInfo: EggAppInfo) => {
   // override config from framework / plugin
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + "_1619355003331_459";
+
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+  };
 
   config.mysql = {
     client: {

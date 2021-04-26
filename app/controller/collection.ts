@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 10:26:58
- * @LastEditTime: 2021-04-26 15:19:38
+ * @LastEditTime: 2021-04-26 23:00:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/controller/collection.ts
@@ -14,7 +14,7 @@ export default class CollectionController extends Controller {
     const insertCollection = await this.service.collection.createCollection({
       collection_name: "testCollection",
       collection_cover: "",
-      user_id: 1,
+      user_id: "1",
     });
     this.ctx.body = {
       msg: "success",
@@ -25,7 +25,7 @@ export default class CollectionController extends Controller {
   /* 修改歌集名称 */
   public async modifyCollection() {
     const modifyRes = await this.service.collection.modifyCollection({
-      id: 0,
+      collection_id: 0,
       collection_name: "modifyCollection",
     });
     this.ctx.body = {
@@ -36,10 +36,10 @@ export default class CollectionController extends Controller {
 
   /* 根据创建者ID获取歌集信息 */
   public async findCollection() {
-    const { user_id = 1 } = this.ctx.query;
+    const { user_id = "1" } = this.ctx.query;
     const findCollectionRes = await this.service.collection.findCollectionByUser(
       {
-        user_id: Number(user_id),
+        user_id: user_id,
       }
     );
     this.ctx.body = {
@@ -52,7 +52,7 @@ export default class CollectionController extends Controller {
   public async getFavCollectionByUser() {
     const favCollections = await this.service.collection.getFavCollectionByUser(
       {
-        user_id: 1,
+        user_id: "1",
       }
     );
     this.ctx.body = {
@@ -65,7 +65,7 @@ export default class CollectionController extends Controller {
   public async insertFavCollection() {
     const insertRes = await this.service.collection.insertFavCollection({
       collection_id: 3779629,
-      user_id: 2,
+      user_id: "2",
     });
     this.ctx.body = {
       msg: "success",
@@ -77,7 +77,7 @@ export default class CollectionController extends Controller {
   public async deleteFavCollection() {
     const deleteRes = await this.service.collection.deleteFavCollection({
       collection_id: 3779629,
-      user_id: 2,
+      user_id: "2",
     });
     this.ctx.body = {
       msg: "success",
@@ -88,7 +88,7 @@ export default class CollectionController extends Controller {
   /* 更新歌集的喜欢次数 */
   public async updateCollectionLikeCount() {
     const updateRes = await this.service.collection.updateCollectionLikeCount({
-      id: 2147483647,
+      collection_id: 2147483647,
       collection_like_count: 1,
     });
     this.ctx.body = {

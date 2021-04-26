@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:06:04
- * @LastEditTime: 2021-04-26 16:11:49
+ * @LastEditTime: 2021-04-26 23:06:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/service/song.ts
@@ -22,7 +22,7 @@ interface ISong {
 interface IFavSong {
   id?: number;
   song_id?: number;
-  user_id?: number;
+  user_id?: string;
 }
 
 interface ISongCollection {
@@ -72,7 +72,7 @@ export default class SongService extends Service {
   /* 更新歌曲的播放次数 */
   public async updateSongPlayCount(params: ISong) {
     const updateRes = await this.app.mysql.update("Song", {
-      id: params.id,
+      song_id: params.song_id,
       song_play_count: params.song_play_count || 0,
     });
     return updateRes;
@@ -91,7 +91,6 @@ export default class SongService extends Service {
   /* 添加歌曲至指定歌集中 */
   public async addSongToCollection(params: ISongCollection) {
     const res = await this.app.mysql.insert("SongCollection", {
-      id: uuidv4(),
       collection_id: params.collection_id,
       song_id: params.song_id,
     });

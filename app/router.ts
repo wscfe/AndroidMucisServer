@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-25 20:50:10
- * @LastEditTime: 2021-04-26 16:15:03
+ * @LastEditTime: 2021-04-26 19:15:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/router.ts
@@ -12,7 +12,7 @@ export default (app: Application) => {
   const { controller, router } = app;
 
   /* 用户相关接口 */
-  router.get("/user/insert", controller.user.insertUser);
+  router.post("/user/insert", controller.user.insertUser);
 
   /* 歌集相关接口 */
   router.get("/collection/create", controller.collection.createCollection);

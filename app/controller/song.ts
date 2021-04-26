@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:04:27
- * @LastEditTime: 2021-04-26 16:13:27
+ * @LastEditTime: 2021-04-26 23:04:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/controller/song.ts
@@ -24,7 +24,7 @@ export default class SongController extends Controller {
   /* 根据用户信息获取喜欢的歌曲 */
   public async getFavSongByUser() {
     const favSongs = await this.service.song.getFavSongsByUser({
-      user_id: 1,
+      user_id: "1",
     });
     this.ctx.body = {
       msg: "success",
@@ -36,7 +36,7 @@ export default class SongController extends Controller {
   public async insertFavSong() {
     const insertRes = await this.service.song.insertFavSong({
       song_id: 1807537867,
-      user_id: 2,
+      user_id: "2",
     });
     this.ctx.body = {
       msg: "success",
@@ -47,7 +47,7 @@ export default class SongController extends Controller {
   /* 删除用户喜欢的歌 */
   public async deleteFavSong() {
     const deleteRes = await this.service.song.deleteFavSong({
-      user_id: 2,
+      user_id: "2",
       song_id: 1807537867,
     });
     this.ctx.body = {
@@ -59,7 +59,7 @@ export default class SongController extends Controller {
   /* 更新歌曲播放次数 */
   public async updateSongPlayCount() {
     const updateRes = await this.service.song.updateSongPlayCount({
-      id: 1811921555,
+      song_id: 1811921555,
       song_play_count: 3,
     });
     this.ctx.body = {

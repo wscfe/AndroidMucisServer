@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 10:29:58
- * @LastEditTime: 2021-04-26 15:18:27
+ * @LastEditTime: 2021-04-26 22:57:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/service/collection.ts
@@ -10,10 +10,9 @@ import { Service } from "egg";
 import { v4 as uuidv4 } from "uuid";
 
 interface ICollection {
-  id?: number;
+  collection_id?: number;
   collection_name?: string;
-  user_id?: number;
-  user_name?: string;
+  user_id?: string;
   collection_cover?: string;
   collection_like_count?: number;
 }
@@ -21,14 +20,14 @@ interface ICollection {
 interface IFavCollections {
   id?: number;
   collection_id?: number;
-  user_id?: number;
+  user_id?: string;
 }
 
 export default class CollectionService extends Service {
   /* 创建歌集 */
   public async createCollection(params: ICollection) {
     const insertRes = await this.app.mysql.insert("Collection", {
-      id: uuidv4(),
+      collection_id: uuidv4(),
       collection_name: params.collection_name,
       collection_cover: params.collection_cover,
       collection_like_count: 0,
@@ -40,7 +39,7 @@ export default class CollectionService extends Service {
   /* 修改歌集名称 */
   public async modifyCollection(params: ICollection) {
     const modifyRes = await this.app.mysql.update("Collection", {
-      id: params.id,
+      collection_id: params.collection_id,
       collection_name: params.collection_name,
     });
     return modifyRes;
@@ -85,7 +84,7 @@ export default class CollectionService extends Service {
   /* 更新歌集的喜欢次数 */
   public async updateCollectionLikeCount(params: ICollection) {
     const updateRes = await this.app.mysql.update("Collection", {
-      id: params.id,
+      collection_id: params.collection_id,
       collection_like_count: params.collection_like_count || 0,
     });
     return updateRes;
