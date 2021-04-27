@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-25 20:50:10
- * @LastEditTime: 2021-04-27 18:08:55
+ * @LastEditTime: 2021-04-27 22:14:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/router.ts
@@ -16,21 +16,18 @@ export default (app: Application) => {
 
   /* 歌集相关接口 */
   router.post("/collection/create", controller.collection.createCollection);
-  router.get("/collection/modify", controller.collection.modifyCollection);
+  router.post("/collection/modify", controller.collection.modifyCollection);
   router.post("/collection/get", controller.collection.findCollection);
-  router.get("/collection/fav", controller.collection.getFavCollectionByUser);
+  // router.get("/collection/fav", controller.collection.getFavCollectionByUser);
   router.get(
     "/collection/updateLikeCount",
     controller.collection.updateCollectionLikeCount
   );
-  router.get(
-    "/collection/insertFav",
-    controller.collection.insertFavCollection
-  );
-  router.get(
-    "/collection/deleteFav",
-    controller.collection.deleteFavCollection
-  );
+  // router.get(
+  //   "/collection/insertFav",
+  //   controller.collection.insertFavCollection
+  // );
+  router.post("/collection/delete", controller.collection.deleteCollection);
 
   /* 歌曲相关接口 */
   router.post("/song/get", controller.song.getSongByCollection);

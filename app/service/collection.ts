@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 10:29:58
- * @LastEditTime: 2021-04-27 17:19:35
+ * @LastEditTime: 2021-04-27 22:14:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/service/collection.ts
@@ -17,11 +17,11 @@ interface ICollection {
   collection_like_count?: number;
 }
 
-interface IFavCollections {
-  id?: number;
-  collection_id?: number;
-  user_id?: string;
-}
+// interface IFavCollections {
+//   id?: number;
+//   collection_id?: number;
+//   user_id?: string;
+// }
 
 export default class CollectionService extends Service {
   /* 创建歌集 */
@@ -38,10 +38,10 @@ export default class CollectionService extends Service {
 
   /* 修改歌集名称 */
   public async modifyCollection(params: ICollection) {
-    const modifyRes = await this.app.mysql.update("Collection", {
-      collection_id: params.collection_id,
-      collection_name: params.collection_name,
-    });
+    const modifyRes = await this.app.mysql.query(
+      "UPDATE Collection SET collection_name = ? where collection_id = ?",
+      [params.collection_name, params.collection_id]
+    );
     return modifyRes;
   }
 
@@ -68,26 +68,26 @@ export default class CollectionService extends Service {
   }
 
   /* 根据用户信息获取喜欢的歌集 */
-  public async getFavCollectionByUser(params: IFavCollections) {
-    const favCollections = await this.app.mysql.query(
-      "SELECT * FROM `FavCollections` WHERE `user_id` = ?",
-      [params.user_id]
-    );
-    return favCollections;
-  }
+  // public async getFavCollectionByUser(params: IFavCollections) {
+  //   const favCollections = await this.app.mysql.query(
+  //     "SELECT * FROM `FavCollections` WHERE `user_id` = ?",
+  //     [params.user_id]
+  //   );
+  //   return favCollections;
+  // }
 
   /* 插入用户喜欢的歌集记录 */
-  public async insertFavCollection(params: IFavCollections) {
-    const insertRes = await this.app.mysql.insert("FavCollections", {
-      collection_id: params.collection_id,
-      user_id: params.user_id,
-    });
-    return insertRes;
-  }
+  // public async insertFavCollection(params: IFavCollections) {
+  //   const insertRes = await this.app.mysql.insert("FavCollections", {
+  //     collection_id: params.collection_id,
+  //     user_id: params.user_id,
+  //   });
+  //   return insertRes;
+  // }
 
-  /* 删除用户喜欢的歌集记录 */
-  public async deleteFavCollection(params: IFavCollections) {
-    const deleteRes = await this.app.mysql.delete("FavCollections", {
+  /* 删除用户创建的歌集记录 */
+  public async deleteCollection(params: ICollection) {
+    const deleteRes = await this.app.mysql.delete("Collection", {
       collection_id: params.collection_id,
       user_id: params.user_id,
     });
