@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-25 20:50:10
- * @LastEditTime: 2021-04-26 19:15:54
+ * @LastEditTime: 2021-04-27 18:08:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/router.ts
@@ -15,9 +15,9 @@ export default (app: Application) => {
   router.post("/user/insert", controller.user.insertUser);
 
   /* 歌集相关接口 */
-  router.get("/collection/create", controller.collection.createCollection);
+  router.post("/collection/create", controller.collection.createCollection);
   router.get("/collection/modify", controller.collection.modifyCollection);
-  router.get("/collection/get", controller.collection.findCollection);
+  router.post("/collection/get", controller.collection.findCollection);
   router.get("/collection/fav", controller.collection.getFavCollectionByUser);
   router.get(
     "/collection/updateLikeCount",
@@ -33,10 +33,10 @@ export default (app: Application) => {
   );
 
   /* 歌曲相关接口 */
-  router.get("/song/get", controller.song.getSongByCollection);
-  router.get("/song/fav", controller.song.getFavSongByUser);
+  router.post("/song/get", controller.song.getSongByCollection);
+  router.post("/song/fav", controller.song.getFavSongByUser);
   router.get("/song/updatePlayCount", controller.song.updateSongPlayCount);
-  router.get("/song/mostPlay", controller.song.getMostPlaySongs);
+  router.post("/song/mostPlay", controller.song.getMostPlaySongs);
   router.get("/song/insertFav", controller.song.insertFavSong);
   router.get("/song/deleteFav", controller.song.deleteFavSong);
   router.get("/song/addToCollection", controller.song.addSongToCollection);

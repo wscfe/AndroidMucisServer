@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 10:29:58
- * @LastEditTime: 2021-04-26 22:57:32
+ * @LastEditTime: 2021-04-27 17:19:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/service/collection.ts
@@ -48,9 +48,22 @@ export default class CollectionService extends Service {
   /* 根据创建者ID获取歌集 */
   public async findCollectionByUser(params: ICollection) {
     const findCollections = await this.app.mysql.query(
-      "SELECT * FROM `Collection` WHERE `user_id` = ?",
+      "SELECT * FROM Collection, User WHERE Collection.user_id = ? AND User.user_id = Collection.user_id",
       [params.user_id]
     );
+    if (!findCollections.length) {
+      await this.createCollection({
+        collection_name: "Default",
+        collection_cover:
+          "http://p3.music.126.net/FM_0Ewfb-9Fp0Hm9TeMZAA==/18806046882899500.jpg?param=200y200",
+        user_id: params.user_id,
+      });
+      const res = await this.app.mysql.query(
+        "SELECT * FROM Collection, User WHERE Collection.user_id = ? AND User.user_id = Collection.user_id",
+        [params.user_id]
+      );
+      return res;
+    }
     return findCollections;
   }
 

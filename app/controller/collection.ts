@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 10:26:58
- * @LastEditTime: 2021-04-26 23:00:31
+ * @LastEditTime: 2021-04-27 18:10:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/controller/collection.ts
@@ -11,10 +11,15 @@ import { Controller } from "egg";
 export default class CollectionController extends Controller {
   /* 创建歌集 */
   public async createCollection() {
+    const {
+      user_id,
+      collection_name,
+      collection_cover,
+    } = this.ctx.request.body;
     const insertCollection = await this.service.collection.createCollection({
-      collection_name: "testCollection",
-      collection_cover: "",
-      user_id: "1",
+      collection_name: collection_name,
+      collection_cover: collection_cover,
+      user_id: user_id,
     });
     this.ctx.body = {
       msg: "success",
@@ -36,7 +41,7 @@ export default class CollectionController extends Controller {
 
   /* 根据创建者ID获取歌集信息 */
   public async findCollection() {
-    const { user_id = "1" } = this.ctx.query;
+    const { user_id } = this.ctx.request.body;
     const findCollectionRes = await this.service.collection.findCollectionByUser(
       {
         user_id: user_id,

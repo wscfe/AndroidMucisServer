@@ -1,13 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:06:04
- * @LastEditTime: 2021-04-26 23:06:01
+ * @LastEditTime: 2021-04-27 16:18:48
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/service/song.ts
  */
 import { Service } from "egg";
-import { v4 as uuidv4 } from "uuid";
 
 interface ISong {
   id?: number;
@@ -35,17 +34,16 @@ export default class SongService extends Service {
   /* 根据歌集信息获取歌曲列表 */
   public async getSongByCollection(params: ISong) {
     const songs = await this.app.mysql.query(
-      "SELECT * FROM Song WHERE collection_id = ?",
-      [params.collection_id]
+      "SELECT * FROM SongCollection, Song, Collection, User WHERE SongCollection.collection_id = ? AND SongCollection.song_id = Song.song_id AND SongCollection.collection_id = Collection.collection_id AND User.user_id = Collection.user_id",
+      [params.collection_id, params.collection_id]
     );
-
     return songs;
   }
 
   /* 根据用户信息获取喜欢的歌曲 */
   public async getFavSongsByUser(params: IFavSong) {
     const favSongs = await this.app.mysql.query(
-      "SELECT * FROM FavSongs WHERE user_id = ?",
+      "SELECT * FROM FavSongs, Song WHERE FavSongs.user_id = ? AND  Song.song_id = FavSongs.song_id",
       [params.user_id]
     );
     return favSongs;
@@ -78,11 +76,11 @@ export default class SongService extends Service {
     return updateRes;
   }
 
-  /* 获取播放次数最多的2首歌 */
+  /* 获取播放次数最多的10首歌 */
   public async getMostPlaySongs() {
     const songs = await this.app.mysql.select("Song", {
       orders: [["song_play_count", "desc"]],
-      limit: 2,
+      limit: 10,
       offset: 0,
     });
     return songs;
