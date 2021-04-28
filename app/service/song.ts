@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:06:04
- * @LastEditTime: 2021-04-28 17:09:56
+ * @LastEditTime: 2021-04-28 21:33:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/service/song.ts
@@ -10,7 +10,7 @@ import { Service } from "egg";
 
 interface ISong {
   id?: number;
-  song_id?: number;
+  song_id: number;
   song_title?: string;
   song_cover?: string;
   song_artist?: string;
@@ -36,9 +36,34 @@ interface IHistorySong {
   user_id?: string;
 }
 
+const formatMusicData = (songs: any, collectionId) => {
+  return songs.map((song) => {
+    return {
+      song_id: song.id,
+      song_title: song.name,
+      song_cover: song.artists[0].picUrl,
+      song_artist: song.artists[0].name,
+      song_play_count: 0,
+      collection_id: collectionId,
+    };
+  });
+};
+
+const uniqueMusicData = (songs: ISong[]) => {
+  let uniqueObj: any = {};
+  const uniqueMusicDataResult: ISong[] = [];
+  songs.forEach((song: ISong) => {
+    uniqueObj[song.song_id] = song;
+  });
+  for (const songId of Object.keys(uniqueObj)) {
+    uniqueMusicDataResult.push(uniqueObj[songId]);
+  }
+  return uniqueMusicDataResult;
+};
+
 export default class SongService extends Service {
   /* 根据歌集信息获取歌曲列表 */
-  public async getSongByCollection(params: ISong) {
+  public async getSongByCollection(params: { collection_id: string }) {
     const songs = await this.app.mysql.query(
       "SELECT * FROM SongCollection, Collection, User, Song WHERE SongCollection.collection_id = ? AND SongCollection.song_id = Song.song_id AND SongCollection.collection_id = Collection.collection_id AND User.user_id = Collection.user_id",
       [params.collection_id, params.collection_id]
@@ -131,91 +156,50 @@ export default class SongService extends Service {
 
   /* 获取音乐数据 */
   public async addNewMusic(collectionIds: number[]) {
-    const musics1 = await this.ctx.curl(
-      `https://music.163.com/api/playlist/detail?id=${collectionIds[0]}`,
-      {
-        dataType: "json",
-      }
+    const oldAllMusics = await this.app.mysql.query(
+      "SELECT * from SongCollection, Song WHERE Song.song_id = SongCollection.song_id",
+      []
     );
-    const formatMusic1 = musics1.data.result.tracks.map((song) => {
+    /* 删除旧表中的音乐和歌集数据，保留表结构 */
+    await this.app.mysql.query("truncate table Song", []);
+    await this.app.mysql.query("truncate table SongCollection", []);
+
+    let allMusics: ISong[] = [];
+    for (const collectionId of collectionIds) {
+      const musics = await this.ctx.curl(
+        `https://music.163.com/api/playlist/detail?id=${collectionId}`,
+        {
+          dataType: "json",
+        }
+      );
+      const formatMusics: ISong[] = formatMusicData(
+        musics.data.result.tracks,
+        collectionId
+      );
+      allMusics.push(...formatMusics);
+    }
+
+    /* 去重之后的音乐数据 */
+    const uniqueMusicDataRes = uniqueMusicData([...allMusics, ...oldAllMusics]);
+
+    /* 格式化之后的音乐数据 */
+    const formatSongs: ISong[] = uniqueMusicDataRes.map((song: ISong) => {
       return {
-        song_id: song.id,
-        song_title: song.name,
-        song_cover: song.artists[0].picUrl,
-        song_artist: song.artists[0].name,
+        song_id: song.song_id,
+        song_title: song.song_title,
+        song_cover: song.song_cover,
+        song_artist: song.song_artist,
         song_play_count: 0,
-        collection_id: collectionIds[0],
-      };
-    });
-    const musics2 = await this.ctx.curl(
-      `https://music.163.com/api/playlist/detail?id=${collectionIds[1]}`,
-      {
-        dataType: "json",
-      }
-    );
-    const formatMusic2 = musics2.data.result.tracks.map((song) => {
-      return {
-        song_id: song.id,
-        song_title: song.name,
-        song_cover: song.artists[0].picUrl,
-        song_artist: song.artists[0].name,
-        song_play_count: 0,
-        collection_id: collectionIds[1],
-      };
-    });
-    const musics3 = await this.ctx.curl(
-      `https://music.163.com/api/playlist/detail?id=${collectionIds[2]}`,
-      {
-        dataType: "json",
-      }
-    );
-    const formatMusic3 = musics3.data.result.tracks.map((song) => {
-      return {
-        song_id: song.id,
-        song_title: song.name,
-        song_cover: song.artists[0].picUrl,
-        song_artist: song.artists[0].name,
-        song_play_count: 0,
-        collection_id: collectionIds[2],
-      };
-    });
-    const musics4 = await this.ctx.curl(
-      `https://music.163.com/api/playlist/detail?id=${collectionIds[3]}`,
-      {
-        dataType: "json",
-      }
-    );
-    const formatMusic4 = musics4.data.result.tracks.map((song) => {
-      return {
-        song_id: song.id,
-        song_title: song.name,
-        song_cover: song.artists[0].picUrl,
-        song_artist: song.artists[0].name,
-        song_play_count: 0,
-        collection_id: collectionIds[3],
       };
     });
 
-    let formatSongs: ISong[] = [];
-    let formatCollections: ISongCollection[] = [];
-    [...formatMusic1, ...formatMusic2, ...formatMusic3, ...formatMusic4].map(
-      (song) => {
-        const isHaving = formatSongs.some((item) => {
-          return item.song_id === song.song_id;
-        });
-        if (!isHaving) {
-          formatSongs.push({
-            song_id: song.song_id,
-            song_title: song.song_title,
-            song_cover: song.song_cover,
-            song_artist: song.song_artist,
-            song_play_count: 0,
-          });
-          formatCollections.push({
-            song_id: song.song_id,
-            collection_id: song.collection_id,
-          });
-        }
+    /* 格式化之后的歌集数据 */
+    const formatCollections: ISongCollection[] = uniqueMusicDataRes.map(
+      (song: ISong) => {
+        return {
+          song_id: song.song_id,
+          collection_id: song.collection_id,
+        };
       }
     );
 

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:04:27
- * @LastEditTime: 2021-04-28 16:55:42
+ * @LastEditTime: 2021-04-28 17:30:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/controller/song.ts
@@ -23,8 +23,9 @@ export default class SongController extends Controller {
 
   /* 根据用户信息获取喜欢的歌曲 */
   public async getFavSongByUser() {
+    const { user_id } = this.ctx.request.body;
     const favSongs = await this.service.song.getFavSongsByUser({
-      user_id: "1",
+      user_id: user_id,
     });
     this.ctx.body = {
       msg: "success",
