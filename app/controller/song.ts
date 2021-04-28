@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:04:27
- * @LastEditTime: 2021-04-28 11:44:31
+ * @LastEditTime: 2021-04-28 16:55:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/controller/song.ts
@@ -136,7 +136,12 @@ export default class SongController extends Controller {
     // 3779629 ---- 新歌榜
     // 3778678 --- 热歌榜
     // 2250011882 --- 抖音排行榜
-    const res = await this.service.song.addNewMusic(2250011882);
+    const res = await this.service.song.addNewMusic([
+      19723756,
+      3779629,
+      3778678,
+      2250011882,
+    ]);
     this.ctx.body = {
       msg: "success",
       data: res,

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:06:04
- * @LastEditTime: 2021-04-28 11:43:05
+ * @LastEditTime: 2021-04-28 17:09:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/service/song.ts
@@ -130,34 +130,100 @@ export default class SongService extends Service {
   }
 
   /* 获取音乐数据 */
-  public async addNewMusic(collectionId: number) {
-    // 19723756
-    const musics = await this.ctx.curl(
-      `https://music.163.com/api/playlist/detail?id=${collectionId}`,
+  public async addNewMusic(collectionIds: number[]) {
+    const musics1 = await this.ctx.curl(
+      `https://music.163.com/api/playlist/detail?id=${collectionIds[0]}`,
       {
         dataType: "json",
       }
     );
-    // const formatMusics = musics.data.result.tracks.map((song) => {
-    //   return {
-    //     song_id: song.id,
-    //     song_title: song.name,
-    //     song_cover: song.artists[0].picUrl,
-    //     song_artist: song.artists[0].name,
-    //     collection_id: collectionId,
-    //     song_play_count: 0,
-    //   };
-    // });
-
-    // const res = await this.app.mysql.insert("Song", formatMusics);
-    const formatMusics = musics.data.result.tracks.map((song) => {
+    const formatMusic1 = musics1.data.result.tracks.map((song) => {
       return {
         song_id: song.id,
-        collection_id: collectionId,
+        song_title: song.name,
+        song_cover: song.artists[0].picUrl,
+        song_artist: song.artists[0].name,
+        song_play_count: 0,
+        collection_id: collectionIds[0],
+      };
+    });
+    const musics2 = await this.ctx.curl(
+      `https://music.163.com/api/playlist/detail?id=${collectionIds[1]}`,
+      {
+        dataType: "json",
+      }
+    );
+    const formatMusic2 = musics2.data.result.tracks.map((song) => {
+      return {
+        song_id: song.id,
+        song_title: song.name,
+        song_cover: song.artists[0].picUrl,
+        song_artist: song.artists[0].name,
+        song_play_count: 0,
+        collection_id: collectionIds[1],
+      };
+    });
+    const musics3 = await this.ctx.curl(
+      `https://music.163.com/api/playlist/detail?id=${collectionIds[2]}`,
+      {
+        dataType: "json",
+      }
+    );
+    const formatMusic3 = musics3.data.result.tracks.map((song) => {
+      return {
+        song_id: song.id,
+        song_title: song.name,
+        song_cover: song.artists[0].picUrl,
+        song_artist: song.artists[0].name,
+        song_play_count: 0,
+        collection_id: collectionIds[2],
+      };
+    });
+    const musics4 = await this.ctx.curl(
+      `https://music.163.com/api/playlist/detail?id=${collectionIds[3]}`,
+      {
+        dataType: "json",
+      }
+    );
+    const formatMusic4 = musics4.data.result.tracks.map((song) => {
+      return {
+        song_id: song.id,
+        song_title: song.name,
+        song_cover: song.artists[0].picUrl,
+        song_artist: song.artists[0].name,
+        song_play_count: 0,
+        collection_id: collectionIds[3],
       };
     });
 
-    const res = await this.app.mysql.insert("SongCollection", formatMusics);
-    return res;
+    let formatSongs: ISong[] = [];
+    let formatCollections: ISongCollection[] = [];
+    [...formatMusic1, ...formatMusic2, ...formatMusic3, ...formatMusic4].map(
+      (song) => {
+        const isHaving = formatSongs.some((item) => {
+          return item.song_id === song.song_id;
+        });
+        if (!isHaving) {
+          formatSongs.push({
+            song_id: song.song_id,
+            song_title: song.song_title,
+            song_cover: song.song_cover,
+            song_artist: song.song_artist,
+            song_play_count: 0,
+          });
+          formatCollections.push({
+            song_id: song.song_id,
+            collection_id: song.collection_id,
+          });
+        }
+      }
+    );
+
+    const res1 = await this.app.mysql.insert("Song", formatSongs);
+    const res2 = await this.app.mysql.insert(
+      "SongCollection",
+      formatCollections
+    );
+    return [res1, res2];
   }
 }
