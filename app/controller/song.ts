@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:04:27
- * @LastEditTime: 2021-04-27 19:08:01
+ * @LastEditTime: 2021-04-28 11:44:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/controller/song.ts
@@ -34,9 +34,10 @@ export default class SongController extends Controller {
 
   /* 插入用户喜欢的歌 */
   public async insertFavSong() {
+    const { song_id, user_id } = this.ctx.request.body;
     const insertRes = await this.service.song.insertFavSong({
-      song_id: 1807537867,
-      user_id: "2",
+      song_id: song_id,
+      user_id: user_id,
     });
     this.ctx.body = {
       msg: "success",
@@ -46,9 +47,10 @@ export default class SongController extends Controller {
 
   /* 删除用户喜欢的歌 */
   public async deleteFavSong() {
+    const { song_id, user_id } = this.ctx.request.body;
     const deleteRes = await this.service.song.deleteFavSong({
-      user_id: "2",
-      song_id: 1807537867,
+      song_id: song_id,
+      user_id: user_id,
     });
     this.ctx.body = {
       msg: "success",
@@ -58,9 +60,10 @@ export default class SongController extends Controller {
 
   /* 更新歌曲播放次数 */
   public async updateSongPlayCount() {
+    const { song_id, song_play_count } = this.ctx.request.body;
     const updateRes = await this.service.song.updateSongPlayCount({
-      song_id: 1811921555,
-      song_play_count: 3,
+      song_id: song_id,
+      song_play_count: song_play_count,
     });
     this.ctx.body = {
       msg: "success",
@@ -79,9 +82,10 @@ export default class SongController extends Controller {
 
   /* 添加歌曲至指定歌集中 */
   public async addSongToCollection() {
+    const { collection_id, song_id } = this.ctx.request.body;
     const res = await this.service.song.addSongToCollection({
-      collection_id: 0,
-      song_id: 1811459887,
+      collection_id: collection_id,
+      song_id: song_id,
     });
     this.ctx.body = {
       msg: "success",
@@ -98,6 +102,31 @@ export default class SongController extends Controller {
     this.ctx.body = {
       msg: "success",
       data: res,
+    };
+  }
+
+  /* 添加播放歌曲到历史记录中 */
+  public async addSongToHistory() {
+    const { user_id, song_id } = this.ctx.request.body;
+    const addRes = await this.service.song.addSongToHistory({
+      user_id: user_id,
+      song_id: song_id,
+    });
+    this.ctx.body = {
+      msg: "success",
+      data: addRes,
+    };
+  }
+
+  /* 获取当前用户的播放历史记录 */
+  public async getSongFromHistoryByUser() {
+    const { user_id } = this.ctx.request.body;
+    const getRes = await this.service.song.getSongFromHistoryByUser({
+      user_id: user_id,
+    });
+    this.ctx.body = {
+      msg: "success",
+      data: getRes,
     };
   }
 

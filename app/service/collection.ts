@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 10:29:58
- * @LastEditTime: 2021-04-27 22:14:03
+ * @LastEditTime: 2021-04-28 10:43:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/service/collection.ts
@@ -90,6 +90,9 @@ export default class CollectionService extends Service {
     const deleteRes = await this.app.mysql.delete("Collection", {
       collection_id: params.collection_id,
       user_id: params.user_id,
+    });
+    await this.app.mysql.delete("SongCollection", {
+      collection_id: params.collection_id,
     });
     return deleteRes;
   }

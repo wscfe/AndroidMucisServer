@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:06:04
- * @LastEditTime: 2021-04-27 16:18:48
+ * @LastEditTime: 2021-04-28 11:43:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/service/song.ts
@@ -30,11 +30,17 @@ interface ISongCollection {
   song_id?: number;
 }
 
+interface IHistorySong {
+  id?: number;
+  song_id?: number;
+  user_id?: string;
+}
+
 export default class SongService extends Service {
   /* 根据歌集信息获取歌曲列表 */
   public async getSongByCollection(params: ISong) {
     const songs = await this.app.mysql.query(
-      "SELECT * FROM SongCollection, Song, Collection, User WHERE SongCollection.collection_id = ? AND SongCollection.song_id = Song.song_id AND SongCollection.collection_id = Collection.collection_id AND User.user_id = Collection.user_id",
+      "SELECT * FROM SongCollection, Collection, User, Song WHERE SongCollection.collection_id = ? AND SongCollection.song_id = Song.song_id AND SongCollection.collection_id = Collection.collection_id AND User.user_id = Collection.user_id",
       [params.collection_id, params.collection_id]
     );
     return songs;
@@ -69,10 +75,11 @@ export default class SongService extends Service {
 
   /* 更新歌曲的播放次数 */
   public async updateSongPlayCount(params: ISong) {
-    const updateRes = await this.app.mysql.update("Song", {
-      song_id: params.song_id,
-      song_play_count: params.song_play_count || 0,
-    });
+    const songPlayCount: number = (params.song_play_count || 0) + 1;
+    const updateRes = await this.app.mysql.query(
+      "UPDATE Song SET song_play_count = ? where song_id = ?",
+      [songPlayCount, params.song_id]
+    );
     return updateRes;
   }
 
@@ -102,6 +109,24 @@ export default class SongService extends Service {
       song_id: params.song_id,
     });
     return res;
+  }
+
+  /* 添加播放歌曲到历史记录中 */
+  public async addSongToHistory(params: IHistorySong) {
+    const addRes = await this.app.mysql.insert("HistorySongs", {
+      user_id: params.user_id,
+      song_id: params.song_id,
+    });
+    return addRes;
+  }
+
+  /* 获取当前用户的播放历史记录 */
+  public async getSongFromHistoryByUser(params: IHistorySong) {
+    const getRes = await this.app.mysql.query(
+      "SELECT * FROM HistorySongs, Song WHERE HistorySongs.user_id = ? AND HistorySongs.song_id = Song.song_id",
+      [params.user_id]
+    );
+    return getRes;
   }
 
   /* 获取音乐数据 */

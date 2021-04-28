@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-25 20:50:10
- * @LastEditTime: 2021-04-27 22:14:30
+ * @LastEditTime: 2021-04-28 11:45:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/router.ts
@@ -32,15 +32,17 @@ export default (app: Application) => {
   /* 歌曲相关接口 */
   router.post("/song/get", controller.song.getSongByCollection);
   router.post("/song/fav", controller.song.getFavSongByUser);
-  router.get("/song/updatePlayCount", controller.song.updateSongPlayCount);
+  router.post("/song/updatePlayCount", controller.song.updateSongPlayCount);
   router.post("/song/mostPlay", controller.song.getMostPlaySongs);
-  router.get("/song/insertFav", controller.song.insertFavSong);
-  router.get("/song/deleteFav", controller.song.deleteFavSong);
-  router.get("/song/addToCollection", controller.song.addSongToCollection);
+  router.post("/song/insertFav", controller.song.insertFavSong);
+  router.post("/song/deleteFav", controller.song.deleteFavSong);
+  router.post("/song/addToCollection", controller.song.addSongToCollection);
   router.get(
     "/song/deleteFromCollection",
     controller.song.deleteSongFromCollection
   );
+  router.post("/song/addToHistory", controller.song.addSongToHistory);
+  router.post("/song/getHistory", controller.song.getSongFromHistoryByUser);
 
   /* 初始化数据库中的音乐数据 */
   router.get("/song/addMusic", controller.song.addNewMusic);
