@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:04:27
- * @LastEditTime: 2021-04-28 17:30:25
+ * @LastEditTime: 2021-04-28 22:23:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/controller/song.ts
@@ -142,6 +142,23 @@ export default class SongController extends Controller {
       3779629,
       3778678,
       2250011882,
+      5453912201,
+      991319590,
+      71384707,
+      1978921795,
+      71385702,
+      745956260,
+      10520166,
+      180106,
+      60198,
+      3812895,
+      21845217,
+      11641012,
+      3001835560,
+      3001795926,
+      5059633707,
+      5059642708,
+      5059661515,
     ]);
     this.ctx.body = {
       msg: "success",
