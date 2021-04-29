@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:04:27
- * @LastEditTime: 2021-04-29 16:33:57
+ * @LastEditTime: 2021-04-29 17:48:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/controller/song.ts
@@ -12,9 +12,9 @@ export default class SongController extends Controller {
   /* 根据歌集信息获取歌曲列表 */
   public async getSongByCollection() {
     const { collectionId, pageNumber } = this.ctx.request.body;
-    console.log(collectionId, pageNumber);
     const songs = await this.service.song.getSongByCollection({
       collection_id: collectionId,
+      pageNumber: pageNumber,
     });
 
     this.ctx.body = {

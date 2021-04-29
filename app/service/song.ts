@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:06:04
- * @LastEditTime: 2021-04-29 16:30:06
+ * @LastEditTime: 2021-04-29 18:39:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/service/song.ts
@@ -63,10 +63,16 @@ const uniqueMusicData = (songs: ISong[]) => {
 
 export default class SongService extends Service {
   /* 根据歌集信息获取歌曲列表 */
-  public async getSongByCollection(params: { collection_id: string }) {
+  public async getSongByCollection(params: {
+    collection_id: string;
+    pageNumber: number;
+  }) {
+    const { collection_id, pageNumber } = params;
     const songs = await this.app.mysql.query(
-      "SELECT * FROM SongCollection, Collection, User, Song WHERE SongCollection.collection_id = ? AND SongCollection.song_id = Song.song_id AND SongCollection.collection_id = Collection.collection_id AND User.user_id = Collection.user_id",
-      [params.collection_id, params.collection_id]
+      `SELECT * FROM SongCollection, Collection, User, Song WHERE SongCollection.collection_id = ? AND SongCollection.song_id = Song.song_id AND SongCollection.collection_id = Collection.collection_id AND User.user_id = Collection.user_id LIMIT ${
+        pageNumber * 5
+      }, 5`,
+      [collection_id, collection_id]
     );
     return songs;
   }
