@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:06:04
- * @LastEditTime: 2021-04-28 21:33:55
+ * @LastEditTime: 2021-04-29 16:30:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/service/song.ts
@@ -67,6 +67,18 @@ export default class SongService extends Service {
     const songs = await this.app.mysql.query(
       "SELECT * FROM SongCollection, Collection, User, Song WHERE SongCollection.collection_id = ? AND SongCollection.song_id = Song.song_id AND SongCollection.collection_id = Collection.collection_id AND User.user_id = Collection.user_id",
       [params.collection_id, params.collection_id]
+    );
+    return songs;
+  }
+  /* 根据关键字获取歌曲信息 */
+  public async getSongByKeyword(params: { keyWord: string }) {
+    const { keyWord } = params;
+    if (!keyWord) {
+      return [];
+    }
+    const songs = await this.app.mysql.query(
+      `SELECT * FROM Song WHERE song_title LIKE '%${keyWord}%'`,
+      []
     );
     return songs;
   }

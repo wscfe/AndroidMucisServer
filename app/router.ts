@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-25 20:50:10
- * @LastEditTime: 2021-04-28 11:45:05
+ * @LastEditTime: 2021-04-29 16:17:04
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/router.ts
@@ -43,6 +43,7 @@ export default (app: Application) => {
   );
   router.post("/song/addToHistory", controller.song.addSongToHistory);
   router.post("/song/getHistory", controller.song.getSongFromHistoryByUser);
+  router.post("/song/keyWord", controller.song.getSongByKeyword);
 
   /* 初始化数据库中的音乐数据 */
   router.get("/song/addMusic", controller.song.addNewMusic);

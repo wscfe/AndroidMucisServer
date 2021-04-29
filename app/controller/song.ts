@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:04:27
- * @LastEditTime: 2021-04-28 22:23:10
+ * @LastEditTime: 2021-04-29 16:33:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/controller/song.ts
@@ -11,8 +11,23 @@ import { Controller } from "egg";
 export default class SongController extends Controller {
   /* 根据歌集信息获取歌曲列表 */
   public async getSongByCollection() {
+    const { collectionId, pageNumber } = this.ctx.request.body;
+    console.log(collectionId, pageNumber);
     const songs = await this.service.song.getSongByCollection({
-      collection_id: this.ctx.request.body.collectionId,
+      collection_id: collectionId,
+    });
+
+    this.ctx.body = {
+      msg: "success",
+      data: songs,
+    };
+  }
+
+  /* 根据关键字获取歌曲信息 */
+  public async getSongByKeyword() {
+    const { keyWord } = this.ctx.request.body;
+    const songs = await this.service.song.getSongByKeyword({
+      keyWord: keyWord,
     });
 
     this.ctx.body = {
