@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:06:04
- * @LastEditTime: 2021-04-29 18:39:56
+ * @LastEditTime: 2021-04-29 19:13:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/service/song.ts
@@ -164,10 +164,16 @@ export default class SongService extends Service {
   }
 
   /* 获取当前用户的播放历史记录 */
-  public async getSongFromHistoryByUser(params: IHistorySong) {
+  public async getSongFromHistoryByUser(params: {
+    user_id: string;
+    pageNumber: number;
+  }) {
+    const { user_id, pageNumber } = params;
     const getRes = await this.app.mysql.query(
-      "SELECT * FROM HistorySongs, Song WHERE HistorySongs.user_id = ? AND HistorySongs.song_id = Song.song_id",
-      [params.user_id]
+      `SELECT * FROM HistorySongs, Song WHERE HistorySongs.user_id = ? AND HistorySongs.song_id = Song.song_id LIMIT ${
+        pageNumber * 5
+      }, 5`,
+      [user_id]
     );
     return getRes;
   }

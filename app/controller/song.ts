@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-26 11:04:27
- * @LastEditTime: 2021-04-29 17:48:56
+ * @LastEditTime: 2021-04-29 19:13:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/controller/song.ts
@@ -136,9 +136,10 @@ export default class SongController extends Controller {
 
   /* 获取当前用户的播放历史记录 */
   public async getSongFromHistoryByUser() {
-    const { user_id } = this.ctx.request.body;
+    const { user_id, pageNumber } = this.ctx.request.body;
     const getRes = await this.service.song.getSongFromHistoryByUser({
       user_id: user_id,
+      pageNumber: pageNumber,
     });
     this.ctx.body = {
       msg: "success",
