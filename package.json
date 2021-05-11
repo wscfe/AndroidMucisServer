@@ -25,6 +25,7 @@
     "egg": "^2.6.1",
     "egg-mysql": "^3.0.0",
     "egg-scripts": "^2.6.0",
+    "random-image-placeholder": "^1.0.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

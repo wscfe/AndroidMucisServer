@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-25 20:50:10
- * @LastEditTime: 2021-04-29 16:17:04
+ * @LastEditTime: 2021-05-11 17:17:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /musicServer/app/router.ts
@@ -47,4 +47,12 @@ export default (app: Application) => {
 
   /* 初始化数据库中的音乐数据 */
   router.get("/song/addMusic", controller.song.addNewMusic);
+
+  /* 数独小程序接口 */
+  router.post("/game/login", controller.game.login);
+  router.post("/game/register", controller.game.register);
+  router.post("/game/resetPassword", controller.game.resetPassword);
+  router.get("/game/getRank", controller.game.gameRank);
+  router.post("/game/insertRecord", controller.game.insertGameRecord);
+  router.post("/game/insertRank", controller.game.insertRankData);
 };
